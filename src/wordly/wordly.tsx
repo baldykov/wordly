@@ -103,7 +103,7 @@ const Wordly: React.FC = () => {
 
   return (
     <div className="wordly">
-      <h1>Угадай слово</h1>
+      <h1>Wordly</h1>
       <div className="guesses">
         {guesses.map((guess, i) => (
           <div key={i} className="guess">
