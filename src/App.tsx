@@ -5,7 +5,7 @@ import 'react-simple-keyboard/build/css/index.css';
 import './App.css';
 import { API_TOKEN, WORDS } from './const';
 
-const TARGET_WORD = WORDS[Math.floor(Math.random() * WORDS.length)]; // Случайное слово для игры
+const TARGET_WORD = String(WORDS[Math.floor(Math.random() * WORDS.length)]).toUpperCase(); // Случайное слово для игры
 
 type LetterStatus = 'correct' | 'present' | 'absent';
 
@@ -33,7 +33,7 @@ const Wordly: React.FC = () => {
         setMessage('Слово должно содержать 5 букв');
       }
     } else if (currentGuess.length < 5 && /^[а-яА-ЯёЁ]$/.test(input)) {
-      setCurrentGuess(currentGuess + input.toLowerCase());
+      setCurrentGuess(currentGuess + input);
     }
   };
 
@@ -83,7 +83,8 @@ const Wordly: React.FC = () => {
     try {
       // Пример запроса к API для проверки слова
       const response = await axios.get(`https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=${API_TOKEN}&lang=ru-ru&text=${word}`);
-      return response.status === 200;
+      
+      return response.status === 200 && 'def' in response.data && Array.isArray(response.data.def) && response.data.def.length > 0;
     } catch (error) {
       return false; // Если слово не найдено
     }
@@ -102,59 +103,63 @@ const Wordly: React.FC = () => {
   };
 
   return (
-    <div className="wordly">
-      <h1>Wordly game!</h1>
-      <div className="guesses">
-        {guesses.map((guess, i) => (
-          <div key={i} className="guess">
-            {guess.split('').map((char, index) => (
-              <span key={index} className={`letter ${getLetterClass(index, char)}`}>
-                {char}
-              </span>
+    <div className="layout">
+      <div className="wordly">
+        <h1>Wordly game!</h1>
+        <div className="game">
+          <div className="guesses">
+            {guesses.map((guess, i) => (
+              <div key={i} className="guess">
+                {guess.split('').map((char, index) => (
+                  <span key={index} className={`letter ${getLetterClass(index, char)}`}>
+                    {char}
+                  </span>
+                ))}
+              </div>
             ))}
+            {guesses.length < 5 && !gameOver && (
+              <div className="current-guess">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <span key={index} className="letter">
+                    {currentGuess[index] || ''}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
-        ))}
-        {guesses.length < 5 && !gameOver && (
-          <div className="current-guess">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <span key={index} className="letter">
-                {currentGuess[index] || ''}
-              </span>
-            ))}
-          </div>
-        )}
+
+          <div className="message">{message ?? ''}</div>
+
+          <Keyboard
+            onKeyPress={handleInput}
+            layout={{
+              default: [
+                'Й Ц У К Е Н Г Ш Щ З Х Ъ',
+                'Ф Ы В А П Р О Л Д Ж Э {bksp}',
+                'Я Ч С М И Т Ь Б Ю {enter}',
+              ],
+            }}
+            display={{
+              '{bksp}': '⌫',
+              '{enter}': 'Ввод',
+            }}
+            buttonTheme={[
+              {
+                class: 'correct',
+                buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'correct').join(' '),
+              },
+              {
+                class: 'present',
+                buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'present').join(' '),
+              },
+              {
+                class: 'absent',
+                buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'absent').join(' '),
+              },
+            ]}
+          />
+        </div>
       </div>
-
-      <Keyboard
-        onKeyPress={handleInput}
-        layout={{
-          default: [
-            'й ц у к е н г ш щ з х ъ',
-            'ф ы в а п р о л д ж э {bksp}',
-            'я ч с м и т ь б ю {enter}',
-          ],
-        }}
-        display={{
-          '{bksp}': '⌫',
-          '{enter}': 'Ввод',
-        }}
-        buttonTheme={[
-          {
-            class: 'correct',
-            buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'correct').join(' '),
-          },
-          {
-            class: 'present',
-            buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'present').join(' '),
-          },
-          {
-            class: 'absent',
-            buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'absent').join(' '),
-          },
-        ]}
-      />
-
-      {message && <div className="message">{message}</div>}
     </div>
   );
 };
