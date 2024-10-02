@@ -4,12 +4,9 @@
   box-sizing: border-box;
   width: 100vw;
   max-width: 100dvw;
-  height: 100vh;
-  max-height: 100vh;
-  padding-top: env(safe-area-inset-top, 40px);
-  padding-bottom: env(safe-area-inset-bottom, 40px);
-  padding-left: env(safe-area-inset-left, 16px);
-  padding-right: env(safe-area-inset-right, 16px);
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 40px 12px;
   overflow: hidden;
   justify-content: center;
 }
@@ -50,6 +47,7 @@ h1 {
   width: 60px;
   height: 60px;
   border: 1px solid #ccc;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,4 +77,9 @@ h1 {
   height: 20px;
   font-size: 18px;
   color: red;
+}
+
+.keyboard {
+  background-color: transparent;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }

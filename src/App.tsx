@@ -143,6 +143,7 @@ const Wordly: React.FC = () => {
               '{bksp}': '⌫',
               '{enter}': 'Ввод',
             }}
+            theme="hg-theme-default keyboard"
             buttonTheme={[
               {
                 class: 'correct',
