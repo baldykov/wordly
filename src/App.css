@@ -4,7 +4,7 @@
   box-sizing: border-box;
   width: 100dvw;
   height: 100dvh;
-  padding: 40px 12px;
+  padding: 30px 12px;
   overflow: hidden;
   justify-content: center;
   background-color: rgb(251, 252, 255);
@@ -41,9 +41,8 @@
 
 h1 {
   font-size: 42px;
-  margin-bottom: 20px;
   
-  background: linear-gradient(90deg, rgb(80, 85, 200), rgb(150, 85, 200), rgb(255, 85, 130));
+  background: linear-gradient(120deg, rgb(80, 85, 200), rgb(150, 85, 200), rgb(255, 85, 130));
   background-size: 200% 200%;
   background-clip: text;
   -webkit-background-clip: text;
@@ -69,12 +68,20 @@ h1 {
 }
 
 .correct {
-  background-color: rgb(83, 141, 78) !important;;
+  background: linear-gradient(120deg, rgb(83, 141, 78), rgb(100, 180, 90)) !important;
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: gradientAnimation 2s ease infinite;
   color: white;
 }
 
 .present {
-  background-color: rgb(200, 180, 70) !important;;
+  background: linear-gradient(120deg, rgb(200, 180, 70), rgb(240, 200, 90)) !important;
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: gradientAnimation 2s ease infinite;
   color: white;
 }
 
