@@ -105,7 +105,7 @@ const Wordly: React.FC = () => {
   return (
     <div className="layout">
       <div className="wordly">
-        <h1>Wordly game!</h1>
+        <h1>WORDLY</h1>
         <div className="game">
           <div className="guesses">
             {guesses.map((guess, i) => (

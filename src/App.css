@@ -2,13 +2,12 @@
   display: flex;
   flex: 1;
   box-sizing: border-box;
-  width: 100vw;
-  max-width: 100dvw;
+  width: 100dvw;
   height: 100dvh;
-  max-height: 100dvh;
   padding: 40px 12px;
   overflow: hidden;
   justify-content: center;
+  background-color: rgb(251, 252, 255);
 }
 
 .game {
@@ -25,17 +24,31 @@
   justify-content: space-between;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
   max-width: 500px;
 }
 
-h1 {
-  font-size: 32px;
-  margin-bottom: 20px;
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-.guesses {
-  /* margin-bottom: 20px; */
+h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
+  
+  background: linear-gradient(90deg, rgb(80, 85, 200), rgb(150, 85, 200), rgb(255, 85, 130));
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientAnimation 5s ease infinite;
 }
 
 .guess, .current-guess {
@@ -56,17 +69,17 @@ h1 {
 }
 
 .correct {
-  background-color: green !important;;
+  background-color: rgb(83, 141, 78) !important;;
   color: white;
 }
 
 .present {
-  background-color: yellow !important;;
-  color: black;
+  background-color: rgb(200, 180, 70) !important;;
+  color: white;
 }
 
 .absent {
-  background-color: grey !important;
+  background-color: rgb(120, 124, 126) !important;
   color: white;
 }
 
@@ -76,7 +89,7 @@ h1 {
   justify-content: center;
   height: 20px;
   font-size: 18px;
-  color: red;
+  color: rgb(55, 55, 55);
 }
 
 .keyboard {
