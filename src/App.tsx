@@ -103,9 +103,7 @@ const Wordly: React.FC = () => {
   };
 
   useEffect(() => {
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.expand();
-    }
+    window?.Telegram?.WebApp.expand();
   }, []);
 
   return (
