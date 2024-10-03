@@ -4,7 +4,7 @@
   box-sizing: border-box;
   width: 100dvw;
   height: 100dvh;
-  padding: 30px 12px;
+  padding: 30px 12px 40px;
   overflow: hidden;
   justify-content: center;
   background-color: rgb(251, 252, 255);
@@ -50,9 +50,15 @@ h1 {
   animation: gradientAnimation 5s ease infinite;
 }
 
-.guess, .current-guess {
+.guess {
   display: flex;
   justify-content: center;
+}
+
+.current-guess {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
 }
 
 .letter {

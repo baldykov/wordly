@@ -4,6 +4,7 @@ import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 import './App.css';
 import { API_TOKEN, WORDS } from './const';
+import ReactConfetti from 'react-confetti';
 
 const TARGET_WORD = String(WORDS[Math.floor(Math.random() * WORDS.length)]).toUpperCase(); // Случайное слово для игры
 
@@ -20,6 +21,7 @@ const Wordly: React.FC = () => {
   const [keyStatus, setKeyStatus] = useState<{ [key: string]: LetterStatus }>({});
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
+  const [gameResult, setGameResult] = useState<'win' | 'lose' | null>(null);
 
   const handleInput = (input: string) => {
     if (gameOver) return;
@@ -71,10 +73,12 @@ const Wordly: React.FC = () => {
 
     if (currentGuess === TARGET_WORD) {
       setGameOver(true);
-      setMessage('Вы выиграли!');
+      setMessage('You win!');
+      setGameResult('win');
     } else if (guesses.length + 1 === 5) {
       setGameOver(true);
-      setMessage(`Вы проиграли! Загаданное слово: ${TARGET_WORD}`);
+      setMessage(`You lose! Word is ${TARGET_WORD}`);
+      setGameResult('lose');
     }
   };
 
@@ -104,10 +108,38 @@ const Wordly: React.FC = () => {
 
   useEffect(() => {
     window?.Telegram?.WebApp.expand();
-  }, []);
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        handleInput('{enter}');
+      } else if (event.key === 'Backspace') {
+        handleInput('{bksp}');
+      } else {
+        handleInput(event.key.toUpperCase());
+      }
+    };
+    document.addEventListener('keydown', handleKeyPress);
 
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    }
+  }, [handleInput]);
+
+  const getKeysWithStatus = (status: LetterStatus) => {
+    const keys = Object.keys(keyStatus).filter((key) => keyStatus[key] === status);
+
+    return keys.length > 0 ? { class: status, buttons: keys.join(' ') } : null;
+  }
+  const buttonsStatuses = [
+    getKeysWithStatus('correct'),
+    getKeysWithStatus('present'),
+    getKeysWithStatus('absent'),
+  ];
+  const buttonTheme = buttonsStatuses.some(item => typeof item === 'object') ? buttonsStatuses : undefined;
+
+  
   return (
     <div className="layout">
+      {gameResult === 'win' && <ReactConfetti />}
       <div className="wordly">
         <h1>WORDLY</h1>
         <div className="game">
@@ -148,20 +180,7 @@ const Wordly: React.FC = () => {
               '{enter}': 'Ввод',
             }}
             theme="hg-theme-default keyboard"
-            buttonTheme={[
-              {
-                class: 'correct',
-                buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'correct').join(' '),
-              },
-              {
-                class: 'present',
-                buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'present').join(' '),
-              },
-              {
-                class: 'absent',
-                buttons: Object.keys(keyStatus).filter((key) => keyStatus[key] === 'absent').join(' '),
-              },
-            ]}
+            buttonTheme={buttonTheme}
           />
         </div>
       </div>
