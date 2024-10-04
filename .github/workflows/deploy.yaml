@@ -1,31 +1,42 @@
 name: Deploy to GitHub Pages
 
+# Запускаем workflow при push в ветку main
 on:
   push:
     branches:
       - main
 
+# Определение работы
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pages: write
+      id-token: write  # Разрешаем доступ к GitHub Pages для деплоя
+
     steps:
+    # Шаг 1: Клонирование репозитория
     - name: Checkout the repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: Install Node.js
-      uses: actions/setup-node@v3
+    # Шаг 2: Установка Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '20'  # Указываем нужную версию Node.js
 
+    # Шаг 3: Установка зависимостей
     - name: Install dependencies
       run: npm ci
 
+    # Шаг 4: Сборка проекта
     - name: Build the project
       run: npm run build
 
+    # Шаг 5: Деплой на GitHub Pages
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: actions/deploy-pages@v4  # Используем новую версию action
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+        publish_dir: ./dist  # Указываем директорию для деплоя (для React — это папка build)
