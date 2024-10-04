@@ -148,7 +148,7 @@ const Wordly: React.FC = () => {
     <div className="layout">
       {gameResult === 'win' && <ReactConfetti numberOfPieces={500} gravity={0.2}/>}
       <div className="wordly">
-        <h1>WORDLY</h1>
+        <h1>WORDLY!</h1>
         <div className="game">
           <div className="guesses">
             {guesses.map((guess, i) => (
