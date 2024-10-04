@@ -1,0 +1,24 @@
+.game-button {
+    background-color: #4CAF50; /* Зеленый фон */
+    color: white; /* Белый цвет текста */
+    padding: 15px 30px; /* Пространство вокруг текста */
+    font-size: 20px; /* Размер текста */
+    border: none; /* Без рамки */
+    border-radius: 10px; /* Закругленные углы */
+    cursor: pointer; /* Изменение курсора при наведении */
+    transition: all 0.3s ease; /* Плавный переход при изменениях */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Тень */
+    width: 100%;
+  }
+  
+  .game-button:hover {
+    background-color: #45a049; /* Более яркий цвет при наведении */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Увеличение тени при наведении */
+  }
+  
+  .game-button:active {
+    background-color: #3e8e41; /* Темнее при нажатии */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Уменьшение тени при нажатии */
+    transform: scale(0.98); /* Небольшой эффект нажатия */
+  }
+  

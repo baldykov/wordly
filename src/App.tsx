@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Keyboard from 'react-simple-keyboard';
+import ReactConfetti from 'react-confetti';
+import { Button } from './components/button';
+
 import 'react-simple-keyboard/build/css/index.css';
 import './App.css';
-import { API_TOKEN, WORDS } from './const';
-import ReactConfetti from 'react-confetti';
-
-const TARGET_WORD = String(WORDS[Math.floor(Math.random() * WORDS.length)]).toUpperCase(); // Случайное слово для игры
+import { checkWordExists, getRandomExistsWord } from './utils/words';
 
 type LetterStatus = 'correct' | 'present' | 'absent';
 
@@ -22,6 +21,7 @@ const Wordly: React.FC = () => {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   const [gameResult, setGameResult] = useState<'win' | 'lose' | null>(null);
+  const [targetWord, setTargetWord] = useState<string>('default');
 
   const handleInput = (input: string) => {
     if (gameOver) return;
@@ -43,16 +43,16 @@ const Wordly: React.FC = () => {
     if (currentGuess.length !== 5) return;
 
     // Проверяем через API, существует ли введённое слово
-    const wordExists = await checkWordExistence(currentGuess);
+    const wordExists = await checkWordExists(currentGuess);
     if (!wordExists) {
       setMessage('Такого слова нет в словаре!');
       return;
     }
 
     const newGuess = currentGuess.split('').map((char, index): Letter => {
-      if (char === TARGET_WORD[index]) {
+      if (char === targetWord[index]) {
         return { char, status: 'correct' };
-      } else if (TARGET_WORD.includes(char)) {
+      } else if (targetWord.includes(char)) {
         return { char, status: 'present' };
       } else {
         return { char, status: 'absent' };
@@ -71,36 +71,25 @@ const Wordly: React.FC = () => {
     setCurrentGuess('');
     setMessage('');
 
-    if (currentGuess === TARGET_WORD) {
+    if (currentGuess === targetWord) {
       setGameOver(true);
       setMessage('You win!');
       setGameResult('win');
     } else if (guesses.length + 1 === 5) {
       setGameOver(true);
-      setMessage(`You lose! Word is ${TARGET_WORD}`);
+      setMessage(`You lose! Word is ${targetWord}`);
       setGameResult('lose');
     }
   };
 
-  // Функция для проверки существования слова через API
-  const checkWordExistence = async (word: string): Promise<boolean> => {
-    try {
-      // Пример запроса к API для проверки слова
-      const response = await axios.get(`https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=${API_TOKEN}&lang=ru-ru&text=${word}`);
-      
-      return response.status === 200 && 'def' in response.data && Array.isArray(response.data.def) && response.data.def.length > 0;
-    } catch (error) {
-      return false; // Если слово не найдено
-    }
-  };
 
   const getLetterClass = (index: number, char: string): string => {
     if (guesses.length === 0) return '';
 
-    if (TARGET_WORD[index] === char) {
+    if (targetWord[index] === char) {
       return 'correct';
     }
-    if (TARGET_WORD.includes(char)) {
+    if (targetWord.includes(char)) {
       return 'present';
     }
     return 'absent';
@@ -136,10 +125,28 @@ const Wordly: React.FC = () => {
   ];
   const buttonTheme = buttonsStatuses.some(item => typeof item === 'object') ? buttonsStatuses : undefined;
 
+  const startNewGame = async () => {
+    const targetWord = await getRandomExistsWord();
+    if (targetWord) {
+      setTargetWord(targetWord);
+      setMessage('');
+    } else {
+      setMessage('Ошибка генерации нового слова');
+    }
+    setGameOver(false);
+    setGameResult(null);
+    setCurrentGuess('');
+    setGuesses([]);
+    setKeyStatus({});
+  }
+
+  useEffect(() => {
+    startNewGame();
+  }, []);
   
   return (
     <div className="layout">
-      {gameResult === 'win' && <ReactConfetti />}
+      {gameResult === 'win' && <ReactConfetti numberOfPieces={500} gravity={0.2}/>}
       <div className="wordly">
         <h1>WORDLY</h1>
         <div className="game">
@@ -171,17 +178,17 @@ const Wordly: React.FC = () => {
             layout={{
               default: [
                 'Й Ц У К Е Н Г Ш Щ З Х Ъ',
-                'Ф Ы В А П Р О Л Д Ж Э {bksp}',
-                'Я Ч С М И Т Ь Б Ю {enter}',
+                'Ф Ы В А П Р О Л Д Ж Э',
+                'Я Ч С М И Т Ь Б Ю {bksp}',
               ],
             }}
-            display={{
-              '{bksp}': '⌫',
-              '{enter}': 'Ввод',
-            }}
+            display={{ '{bksp}': '⌫' }}
             theme="hg-theme-default keyboard"
             buttonTheme={buttonTheme}
           />
+          {gameOver
+            ? <Button label="Начать заново" onClick={startNewGame} />
+            : <Button label="Проверить" onClick={() => handleInput('{enter}')} />}
         </div>
       </div>
     </div>
