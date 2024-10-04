@@ -7,7 +7,7 @@
   padding: 40px 12px 45px;
   overflow: hidden;
   justify-content: center;
-  background-color: rgb(251, 252, 255);
+  background-color: rgb(251, 252, 252);
 }
 
 .game {
@@ -74,20 +74,12 @@ h1 {
 }
 
 .correct {
-  background: linear-gradient(120deg, rgb(83, 141, 78), rgb(100, 180, 90)) !important;
-  background-size: 200% 200%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  animation: gradientAnimation 2s ease infinite;
+  background-color: #4caf4fd0 !important;
   color: white;
 }
 
 .present {
-  background: linear-gradient(120deg, rgb(200, 180, 70), rgb(240, 200, 90)) !important;
-  background-size: 200% 200%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  animation: gradientAnimation 2s ease infinite;
+  background-color: #ffc107db !important;
   color: white;
 }
 
@@ -102,10 +94,54 @@ h1 {
   justify-content: center;
   height: 20px;
   font-size: 18px;
-  color: rgb(55, 55, 55);
+  color: rgb(127, 127, 127); /* Светло-серый текст */
 }
 
 .keyboard {
   background-color: transparent;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  .hg-button {
+    border-bottom: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .layout {
+    background-color: rgb(32, 33, 36); /* Темный фон */
+  }
+
+  .letter {
+    border: 1px solid #555; /* Темные рамки для букв */
+    background-color: rgb(43, 44, 47); /* Темный фон для ячеек */
+    color: white; /* Белый текст */
+  }
+
+  .correct {
+    background-color: rgba(56, 142, 60, 0.85); /* Темно-зеленый */
+    color: white;
+  }
+
+  .present {
+    background-color: rgba(255, 193, 7, 0.9); /* Темно-желтый */
+    color: white;
+  }
+
+  .absent {
+    background-color: rgb(97, 97, 97); /* Темный серый для отсутствующих букв */
+    color: white;
+  }
+
+  .message {
+    color: rgb(200, 200, 200); /* Светло-серый текст */
+  }
+
+  .keyboard {
+    /* background-color: rgb(48, 49, 52); Темный фон клавиатуры */
+    color: white;
+
+    .hg-button {
+      background-color: rgb(48, 49, 52); /* Темный фон клавиатуры */
+    }
+  }
 }
